@@ -192,10 +192,8 @@ namespace fireEffect {
             drawFire(left, top, this.width, this.height, this.fireData);
         }
 
-        destroy(effect?: effects.ParticleEffect, duration?: number) {
-            if (this.flags & sprites.Flag.Destroyed)
-                return;
-            this.flags |= sprites.Flag.Destroyed;
+        _destroyCore() {
+            super._destroyCore();
             this.fireData.children.removeElement(this);
         }
     }
