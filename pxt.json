@@ -1,6 +1,6 @@
 {
     "name": "arcade-fire-sprites",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "files": [
         "state.ts",
         "api.ts",
