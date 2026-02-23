@@ -92,7 +92,7 @@ namespace fireEffect {
             this.values = [];
             this.children = [];
             this.rendered = image.create(source.dataWidth, source.dataHeight - 1);
-            this.sputterInterval = source.sputterInterval;
+            this.resetSputterInterval();
             for (let x = 0; x < source.dataWidth; x++) {
                 for (let y = 0; y < source.dataHeight; y++) {
                     this.values.push(0)
@@ -132,7 +132,7 @@ namespace fireEffect {
                 strength = Math.idiv(this.source.strength, 2);
             }
             else if (this.sputterCount % this.sputterInterval === 2) {
-                this.sputterInterval = Math.max(3, randint(this.source.sputterInterval * 2 / 3, this.source.sputterInterval * 4 / 3)) | 0;
+                this.resetSputterInterval();
                 this.sputterCount = 2;
             }
 
@@ -168,31 +168,35 @@ namespace fireEffect {
 
             return s;
         }
+
+        protected resetSputterInterval() {
+            this.sputterInterval = Math.max(3, randint(this.source.sputterInterval * 2 / 3, this.source.sputterInterval * 4 / 3)) | 0;
+        }
     }
 
     class FireView extends sprites.ExtendableSprite {
         constructor(
-            public data: FireData,
+            public fireData: FireData,
             kind?: number
         ) {
             super(img`0`, kind);
             this.setFlag(SpriteFlag.Ghost, true);
-            this.setDimensions(this.data.source.width, this.data.source.height);
+            this.setDimensions(this.fireData.source.width, this.fireData.source.height);
         }
 
         draw(left: number, top: number) {
             if (this.isOutOfScreen(game.currentScene().camera)) {
                 return;
             }
-            this.data.update();
-            drawFire(left, top, this.width, this.height, this.data);
+            this.fireData.update();
+            drawFire(left, top, this.width, this.height, this.fireData);
         }
 
         destroy(effect?: effects.ParticleEffect, duration?: number) {
             if (this.flags & sprites.Flag.Destroyed)
                 return;
             this.flags |= sprites.Flag.Destroyed;
-            this.data.children.removeElement(this);
+            this.fireData.children.removeElement(this);
         }
     }
 
