@@ -73,6 +73,9 @@ namespace fireEffect {
         }
 
         setRamp(fireRamp: Image) {
+            if (fireRamp.height !== 1 || fireRamp.width !== 6) {
+                throw "Fire ramp must be 6 pixels wide and 1 pixel tall";
+            }
             this.palette = [0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5].map(index => fireRamp.getPixel(index, 0))
         }
     }
