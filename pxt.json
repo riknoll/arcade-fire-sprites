@@ -4,7 +4,13 @@
     "files": [
         "state.ts",
         "api.ts",
-        "main.ts"
+        "main.ts",
+        "docs/create-fire-spawner.md",
+        "docs/create-fire-sprite.md",
+        "docs/set-strength.md",
+        "docs/set-update-interval.md",
+        "docs/set-sputter-interval.md",
+        "docs/set-color-ramp.md"
     ],
     "supportedTargets": [
         "arcade"

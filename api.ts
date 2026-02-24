@@ -28,6 +28,7 @@ namespace fireEffect {
     //% strength.defl=30
     //% maxSources.defl=8
     //% inlineInputMode=inline
+    //% help=github:arcade-fire-sprites/docs/create-fire-spawner
     //% weight=100
     export function createFireSpawner(
         width: number,
@@ -64,6 +65,7 @@ namespace fireEffect {
     //% spawner.defl=mySpawner
     //% kind.shadow=spritekind
     //% inlineInputMode=inline
+    //% help=github:arcade-fire-sprites/docs/create-fire-sprite
     //% weight=90
     export function createFireSprite(
         spawner: FireSpawner,
@@ -90,6 +92,7 @@ namespace fireEffect {
     //% strength.defl=30
     //% inlineInputMode=inline
     //% weight=80
+    //% help=github:arcade-fire-sprites/docs/set-strength
     //% blockGap=8
     export function setStrength(
         spawner: FireSpawner,
@@ -119,6 +122,7 @@ namespace fireEffect {
     //% inlineInputMode=inline
     //% weight=70
     //% blockGap=8
+    //% help=github:arcade-fire-sprites/docs/set-update-interval
     export function setUpdateInterval(spawner: FireSpawner, interval: number) {
         spawner.updateInterval = Math.max(interval, 1) | 0;
     }
@@ -144,6 +148,7 @@ namespace fireEffect {
     //% inlineInputMode=inline
     //% weight=60
     //% blockGap=8
+    //% help=github:arcade-fire-sprites/docs/set-sputter-interval
     export function setSputterInterval(spawner: FireSpawner, interval: number) {
         spawner.sputterInterval = Math.max(interval, 3) | 0;
     }
@@ -166,6 +171,7 @@ namespace fireEffect {
     //% ramp.shadow=fireEffect__image
     //% ramp.defl="img`. 2 4 5 1 1`"
     //% weight=0
+    //% help=github:arcade-fire-sprites/docs/set-color-ramp
     export function setColorRamp(
         spawner: FireSpawner,
         ramp: Image
