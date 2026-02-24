@@ -1,6 +1,8 @@
 # set strength
 
-Sets the strength of all fire sprites spawned from the given spawner. Higher strength values will result in a taller, brighter flame. all existing sprites from that spawner.
+Sets the strength of all fire sprites spawned from the given spawner. Higher strength values will result in a taller, brighter flame.
+
+All sprites from the spawner share the same strength, so changing the strength will change all existing sprites from that spawner.
 
 ```sig
 let mySpawner = fireEffect.createFireSpawner(8, 16, 30)

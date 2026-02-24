@@ -1,6 +1,8 @@
 # set sputter interval
 
-Sets the sputter interval of the given fire spawner. The sputter interval controls how often the fire will sputter, which is when the fire randomly decreases in strength for a few frame to create a more natural flickering effect. Higher values will result in less frequent sputterning. the sputtering frequency of all existing sprites from that spawner.
+Sets the sputter interval of the given fire spawner. The sputter interval controls how often the fire will sputter, which is when the fire randomly decreases in strength for a few frame to create a more natural flickering effect. Higher values will result in less frequent sputterning.
+
+All sprites from the spawner share the same sputter interval, so changing the sputter interval will change the sputtering frequency of all existing sprites from that spawner.
 
 ```sig
 let mySpawner = fireEffect.createFireSpawner(8, 16, 30)
