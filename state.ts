@@ -172,6 +172,10 @@ namespace fireEffect {
             return s;
         }
 
+        requiresBlit() {
+            return this.source.dataWidth < this.source.width || this.source.dataHeight < this.source.height;
+        }
+
         protected resetSputterInterval() {
             this.sputterInterval = Math.max(3, randint(this.source.sputterInterval * 2 / 3, this.source.sputterInterval * 4 / 3)) | 0;
         }
@@ -184,7 +188,12 @@ namespace fireEffect {
         ) {
             super(img`0`, kind);
             this.setFlag(SpriteFlag.Ghost, true);
-            this.setDimensions(this.fireData.source.width, this.fireData.source.height);
+            if (this.fireData.requiresBlit()) {
+                this.setDimensions(this.fireData.source.width, this.fireData.source.height);
+            }
+            else {
+                this.setImage(this.fireData.rendered);
+            }
         }
 
         draw(left: number, top: number) {
@@ -192,7 +201,38 @@ namespace fireEffect {
                 return;
             }
             this.fireData.update();
-            drawFire(left, top, this.width, this.height, this.fireData);
+            drawFire(left, top, this);
+        }
+
+        drawScaled(drawLeft: number, drawTop: number, image: Image) {
+            if (this._rotatedBBox) {
+                helpers.imageDrawScaledRotated(
+                    screen,
+                    drawLeft,
+                    drawTop,
+                    image,
+                    this.sx,
+                    this.sy,
+                    this.rotation
+                );
+            }
+            else if (!this._isScaled())
+                screen.drawTransparentImage(image, drawLeft, drawTop);
+            else
+                screen.blit(
+                    // dst rect in screen
+                    drawLeft, drawTop,
+                    this.width,
+                    this.height,
+                    // src rect in sprite image
+                    image,
+                    0, 0,
+                    image.width, image.height,
+                    true, false);
+        }
+
+        _isScaled(): boolean {
+            return this._sx !== Fx.oneFx8 || this._sy !== Fx.oneFx8;
         }
 
         _destroyCore() {
@@ -201,16 +241,16 @@ namespace fireEffect {
         }
     }
 
-    function drawFire(left: number, top: number, width: number, height: number, data: FireData) {
+    function drawFire(left: number, top: number, sprite: FireView) {
+        if (!sprite.fireData.requiresBlit()) {
+            sprite.drawScaled(left, top, sprite.fireData.rendered);
+            return;
+        }
+
         // since the fire data is smaller than the width, we're going to loop
         // the middle portion
         const loopStart = 5;
-        const loopLength = data.source.dataWidth - (loopStart << 1);
-
-        if (data.source.dataWidth >= width && data.source.dataHeight >= height) {
-            screen.drawTransparentImage(data.rendered, left, top);
-            return;
-        }
+        const loopLength = sprite.fireData.source.dataWidth - (loopStart << 1);
 
 
         // left edge of fire
@@ -218,36 +258,36 @@ namespace fireEffect {
             left,
             top,
             loopStart,
-            data.source.dataHeight,
-            data.rendered,
+            sprite.fireData.source.dataHeight,
+            sprite.fireData.rendered,
             0,
             0,
             loopStart,
-            data.source.dataHeight,
+            sprite.fireData.source.dataHeight,
             true,
             false
         );
 
         // right edge of fire
         screen.blit(
-            left + width - loopStart,
+            left + sprite.width - loopStart,
             top,
             loopStart,
-            data.source.dataHeight,
-            data.rendered,
-            data.source.dataWidth - loopStart,
+            sprite.fireData.source.dataHeight,
+            sprite.fireData.rendered,
+            sprite.fireData.source.dataWidth - loopStart,
             0,
             loopStart,
-            data.source.dataHeight,
+            sprite.fireData.source.dataHeight,
             true,
             false
         );
 
 
         // repeat the loop, flipping direction each time so that it looks more continuous
-        const numLoops = (width - (loopStart << 1)) / loopLength;
+        const numLoops = (sprite.width - (loopStart << 1)) / loopLength;
         for (let i = 0; i < numLoops; i++) {
-            const actualLoopLength = Math.min(loopLength, width - (loopStart << 1) - (i * loopLength))
+            const actualLoopLength = Math.min(loopLength, sprite.width - (loopStart << 1) - (i * loopLength))
             const offsetX = left + loopStart + i * loopLength;
             if (i & 1) {
                 // we don't have an API to blit backwards, so do it column by column
@@ -256,12 +296,12 @@ namespace fireEffect {
                         offsetX + x,
                         top,
                         1,
-                        data.source.dataHeight,
-                        data.rendered,
-                        data.source.dataWidth - loopStart - x,
+                        sprite.fireData.source.dataHeight,
+                        sprite.fireData.rendered,
+                        sprite.fireData.source.dataWidth - loopStart - x,
                         0,
                         1,
-                        data.source.dataHeight,
+                        sprite.fireData.source.dataHeight,
                         true,
                         false
                     );
@@ -272,12 +312,12 @@ namespace fireEffect {
                     offsetX,
                     top,
                     actualLoopLength,
-                    data.source.dataHeight,
-                    data.rendered,
+                    sprite.fireData.source.dataHeight,
+                    sprite.fireData.rendered,
                     loopStart,
                     0,
                     actualLoopLength,
-                    data.source.dataHeight,
+                    sprite.fireData.source.dataHeight,
                     true,
                     false
                 );

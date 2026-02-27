@@ -12,6 +12,9 @@
         "docs/set-sputter-interval.md",
         "docs/set-color-ramp.md"
     ],
+    "testFiles": [
+        "test.ts"
+    ],
     "supportedTargets": [
         "arcade"
     ],
